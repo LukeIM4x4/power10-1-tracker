@@ -140,21 +140,21 @@ input[type=radio]{accent-color:var(--accent)}
 <body>
 <header class="site-header">
   <div class="logo"><span class="logo-dot"></span>Power10.1 Brotherhood</div>
-  <div class="header-meta">Apr 2 — Jun 30, 2026<br>Week <span id="hdr-week">—</span> of 13</div>
+  <div class="header-meta">Apr 2 - Jun 30, 2026<br>Week <span id="hdr-week">-</span> of 13</div>
 </header>
 <div class="hero">
   <div class="hero-title">90 DAY<br><span>CHALLENGE</span></div>
-  <div class="hero-sub">5 men &nbsp;·&nbsp; 3 goals each &nbsp;·&nbsp; no excuses &nbsp;·&nbsp; check-in every sunday</div>
+  <div class="hero-sub">5 men - 3 goals each - no excuses - check-in every sunday</div>
 </div>
 <div class="stats-bar">
   <div class="stat-cell"><div class="stat-num" id="stat-days">90</div><div class="stat-label">Days remaining</div></div>
   <div class="stat-cell"><div class="stat-num" id="stat-checkins">0</div><div class="stat-label">Check-ins logged</div></div>
-  <div class="stat-cell"><div class="stat-num" id="stat-streak">0</div><div class="stat-label">Top streak (wks)</div></div>
+  <div class="stat-cell"><div class="stat-num" id="stat-streak">0</div><div class="stat-label">Top streak wks</div></div>
   <div class="stat-cell"><div class="stat-num" id="stat-rate">0%</div><div class="stat-label">Group completion</div></div>
 </div>
 <nav class="nav-tabs">
   <button class="nav-tab active" onclick="switchTab('leaderboard',this)">Leaderboard</button>
-  <button class="nav-tab" onclick="switchTab('members',this)">Goals & Stakes</button>
+  <button class="nav-tab" onclick="switchTab('members',this)">Goals and Stakes</button>
   <button class="nav-tab" onclick="switchTab('checkins',this)">Weekly Check-in</button>
   <button class="nav-tab" onclick="switchTab('rules',this)">Rules</button>
 </nav>
@@ -170,8 +170,8 @@ input[type=radio]{accent-color:var(--accent)}
     <div class="field-group"><label class="field-label">Fitness goal</label><input class="field-input" id="ef-fitness" type="text" placeholder="e.g. Run a sub-25 min 5K by June 30"></div>
     <div class="field-group"><label class="field-label">Business goal</label><input class="field-input" id="ef-biz" type="text" placeholder="e.g. Launch one new revenue stream"></div>
     <div class="field-group"><label class="field-label">Personal goal</label><input class="field-input" id="ef-personal" type="text" placeholder="e.g. Read 6 books in 90 days"></div>
-    <div class="field-group"><label class="field-label">Reward — if you hit all 3</label><input class="field-input" id="ef-reward" type="text" placeholder="e.g. Deep sea fishing trip, group pays"></div>
-    <div class="field-group"><label class="field-label">Stake — if you miss</label><input class="field-input" id="ef-stake" type="text" placeholder="e.g. $300 to the group treasury"></div>
+    <div class="field-group"><label class="field-label">Reward if you hit all 3</label><input class="field-input" id="ef-reward" type="text" placeholder="e.g. Deep sea fishing trip group pays"></div>
+    <div class="field-group"><label class="field-label">Stake if you miss</label><input class="field-input" id="ef-stake" type="text" placeholder="e.g. $300 to the group treasury"></div>
     <div id="save-status" class="save-status"></div>
     <div class="modal-actions">
       <button class="btn-save" onclick="saveGoals()">Save goals</button>
@@ -181,10 +181,10 @@ input[type=radio]{accent-color:var(--accent)}
 </div>
 <div class="modal-overlay" id="ci-modal">
   <div class="modal">
-    <div class="modal-title">Week <span id="ci-week-num">—</span> Check-in</div>
+    <div class="modal-title">Week <span id="ci-week-num">-</span> Check-in</div>
     <div class="ci-modal-member" id="ci-modal-member"></div>
     <div class="checkin-goals" id="ci-goals-display"></div>
-    <div class="field-group"><label class="field-label">Notes / wins / struggles (optional)</label><textarea class="ci-notes-area" id="ci-notes" placeholder="What moved? What didn't? Be honest with the group."></textarea></div>
+    <div class="field-group"><label class="field-label">Notes optional</label><textarea class="ci-notes-area" id="ci-notes" placeholder="What moved? What did not? Be honest with the group."></textarea></div>
     <div id="ci-save-status" class="save-status"></div>
     <div class="modal-actions">
       <button class="btn-save" onclick="saveCheckIn()">Submit check-in</button>
@@ -194,146 +194,311 @@ input[type=radio]{accent-color:var(--accent)}
 </div>
 <div class="toast" id="toast"></div>
 <script>
-const SUPABASE_URL='https://mlbqyxpsrtztykwfagzo.supabase.co';
-const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1sYnF5eHBzcnR6dHlrd2ZhZ3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNjM1MzcsImV4cCI6MjA5MDczOTUzN30.doQWAs6za2LjRh5vWacJryPWo24qINZRa3CaR6G5N8M';
-const MEMBERS=[
-{name:'Luke Schnacke',initials:'LS',state:'OR',color:'#00E5FF',bg:'rgba(0,229,255,0.15)'},
-{name:'Scott Vogeli',initials:'SV',state:'CA',color:'#FF4FA0',bg:'rgba(255,79,160,0.15)'},
-{name:'JP Rinylo',initials:'JP',state:'NJ',color:'#FFB800',bg:'rgba(255,184,0,0.15)'},
-{name:"Fritz O'Connor",initials:'FO',state:'KY',color:'#00C97A',bg:'rgba(0,201,122,0.15)'},
-{name:'Zac Spencer',initials:'ZS',state:'BC',color:'#B06FFF',bg:'rgba(176,111,255,0.15)'},
+var SUPABASE_URL = 'https://mlbqyxpsrtztykwfagzo.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1sYnF5eHBzcnR6dHlrd2ZhZ3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNjM1MzcsImV4cCI6MjA5MDczOTUzN30.doQWAs6za2LjRh5vWacJryPWo24qINZRa3CaR6G5N8M';
+var MEMBERS = [
+  {name:'Luke Schnacke', initials:'LS', state:'OR', color:'#00E5FF', bg:'rgba(0,229,255,0.15)'},
+  {name:'Scott Vogeli',  initials:'SV', state:'CA', color:'#FF4FA0', bg:'rgba(255,79,160,0.15)'},
+  {name:'JP Rinylo',     initials:'JP', state:'NJ', color:'#FFB800', bg:'rgba(255,184,0,0.15)'},
+  {name:"Fritz O'Connor",initials:'FO', state:'KY', color:'#00C97A', bg:'rgba(0,201,122,0.15)'},
+  {name:'Zac Spencer',   initials:'ZS', state:'BC', color:'#B06FFF', bg:'rgba(176,111,255,0.15)'}
 ];
-const START=new Date('2026-04-02');
-const END=new Date('2026-06-30');
-const now=new Date();
-const daysLeft=Math.max(0,Math.floor((END-now)/86400000));
-const currentWeek=Math.min(13,Math.max(1,Math.ceil((now-START)/(7*86400000))+1));
-const weeksGone=Math.max(0,currentWeek-1);
-document.getElementById('hdr-week').textContent=currentWeek;
-document.getElementById('stat-days').textContent=daysLeft;
-let goalsData={},checkinsData={};
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-function initLocalData(){
-MEMBERS.forEach(m=>{goalsData[m.name]={fitness:'',biz:'',personal:'',reward:'',stake:''};checkinsData[m.name]={};});
+var START = new Date('2026-04-02');
+var END = new Date('2026-06-30');
+var now = new Date();
+var daysLeft = Math.max(0, Math.floor((END - now) / 86400000));
+var currentWeek = Math.min(13, Math.max(1, Math.ceil((now - START) / (7 * 86400000)) + 1));
+var weeksGone = Math.max(0, currentWeek - 1);
+document.getElementById('hdr-week').textContent = currentWeek;
+document.getElementById('stat-days').textContent = daysLeft;
+var goalsData = {};
+var checkinsData = {};
+var db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+function initLocalData() {
+  for (var i = 0; i < MEMBERS.length; i++) {
+    goalsData[MEMBERS[i].name] = {fitness:'', biz:'', personal:'', reward:'', stake:''};
+    checkinsData[MEMBERS[i].name] = {};
+  }
 }
-async function loadAll(){
-initLocalData();
-try{
-const [gRes,cRes]=await Promise.all([db.from('goals_p101').select(''),db.from('checkins_p101').select('')]);
-if(gRes.data) gRes.data.forEach(r=>{goalsData[r.member_name]=r;});
-if(cRes.data) cRes.data.forEach(r=>{if(!checkinsData[r.member_name])checkinsData[r.member_name]={};checkinsData[r.member_name][r.week_number]=r;});
-}catch(e){
-console.error(e);
-showToast('Error loading data','error');
+function loadAll() {
+  initLocalData();
+  Promise.all([
+    db.from('goals_p101').select('*'),
+    db.from('checkins_p101').select('*')
+  ]).then(function(results) {
+    var gRes = results[0];
+    var cRes = results[1];
+    if (gRes.data) {
+      for (var i = 0; i < gRes.data.length; i++) {
+        goalsData[gRes.data[i].member_name] = gRes.data[i];
+      }
+    }
+    if (cRes.data) {
+      for (var i = 0; i < cRes.data.length; i++) {
+        var r = cRes.data[i];
+        if (!checkinsData[r.member_name]) checkinsData[r.member_name] = {};
+        checkinsData[r.member_name][r.week_number] = r;
+      }
+    }
+    renderAll();
+  }).catch(function(e) {
+    console.error(e);
+    showToast('Error loading data', 'error');
+    renderAll();
+  });
 }
-renderAll();
+function getScore(name) { return Object.keys(checkinsData[name] || {}).length; }
+function updateStats() {
+  var total = 0, maxS = 0;
+  for (var i = 0; i < MEMBERS.length; i++) {
+    var s = getScore(MEMBERS[i].name);
+    total += s;
+    if (s > maxS) maxS = s;
+  }
+  var possible = MEMBERS.length * Math.max(1, weeksGone);
+  var pct = possible > 0 ? Math.round((total / possible) * 100) : 0;
+  document.getElementById('stat-checkins').textContent = total;
+  document.getElementById('stat-streak').textContent = maxS;
+  document.getElementById('stat-rate').textContent = pct + '%';
 }
-function renderAll(){renderLeaderboard();renderMembers();renderCheckIns();renderRules();updateStats();}
-function getScore(name){return Object.values(checkinsData[name]||{}).length;}
-function updateStats(){
-let total=0,maxS=0;
-MEMBERS.forEach(m=>{const s=getScore(m.name);total+=s;if(s>maxS)maxS=s;});
-const possible=MEMBERS.length*Math.max(1,weeksGone);
-const pct=possible>0?Math.round((total/possible)*100):0;
-document.getElementById('stat-checkins').textContent=total;
-document.getElementById('stat-streak').textContent=maxS;
-document.getElementById('stat-rate').textContent=pct+'%';
+function renderLeaderboard() {
+  var sorted = MEMBERS.slice().sort(function(a,b) {
+    var diff = getScore(b.name) - getScore(a.name);
+    return diff !== 0 ? diff : a.name.localeCompare(b.name);
+  });
+  var html = '<table class="lb-table"><thead><tr><th style="width:48px"></th><th>Member</th><th>Goals set</th><th>Check-ins</th><th style="width:140px">Consistency</th></tr></thead><tbody>';
+  for (var i = 0; i < sorted.length; i++) {
+    var m = sorted[i];
+    var rank = i + 1;
+    var rCls = rank <= 3 ? 'p' + rank : '';
+    var g = goalsData[m.name] || {};
+    var score = getScore(m.name);
+    var pct = weeksGone > 0 ? Math.round((score / weeksGone) * 100) : 0;
+    var fdot = g.fitness ? 'goal-dot set-fit' : 'goal-dot';
+    var bdot = g.biz ? 'goal-dot set-biz' : 'goal-dot';
+    var pdot = g.personal ? 'goal-dot set-per' : 'goal-dot';
+    html += '<tr class="lb-row">';
+    html += '<td><div class="lb-rank ' + rCls + '">' + rank + '</div></td>';
+    html += '<td><div class="lb-name-cell">';
+    html += '<div class="lb-avatar" style="background:' + m.bg + ';color:' + m.color + ';">' + m.initials + '</div>';
+    html += '<div><div class="lb-fullname">' + m.name + '</div><div class="lb-state">' + m.state + '</div></div></div></td>';
+    html += '<td><div class="lb-goals-set">';
+    html += '<div class="' + fdot + '"></div>';
+    html += '<div class="' + bdot + '"></div>';
+    html += '<div class="' + pdot + '"></div>';
+    html += '</div></td>';
+    html += '<td><div class="lb-checkins">' + score + '</div><div class="lb-rate">' + (pct > 0 ? pct + '% rate' : '-') + '</div></td>';
+    html += '<td><div class="lb-bar-wrap"><div class="lb-bar-bg"><div class="lb-bar-fill" style="width:' + pct + '%"></div></div></div></td>';
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  document.getElementById('view-leaderboard').innerHTML = html;
 }
-function renderLeaderboard(){
-const sorted=MEMBERS.map(m=>({...m,score:getScore(m.name)})).sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name));
-let html='<table class="lb-table"><thead><tr><th style="width:48px"></th><th>Member</th><th>Goals set</th><th>Check-ins</th><th style="width:140px">Consistency</th></tr></thead><tbody>';
-sorted.forEach((m,i)=>{
-const rank=i+1;const rankClass=rank<=3?'p'+rank:'';const g=goalsData[m.name]||{};const pct=weeksGone>0?Math.round((m.score/weeksGone)*100):0;
-html+=<tr class="lb-row"><td><div class="lb-rank ${rankClass}">${rank}</div></td><td><div class="lb-name-cell"><div class="lb-avatar" style="background:${m.bg};color:${m.color};">${m.initials}</div><div><div class="lb-fullname">${m.name}</div><div class="lb-state">${m.state}</div></div></div></td><td><div class="lb-goals-set"><div class="goal-dot ${g.fitness?'set-fit':''}" title="Fitness"></div><div class="goal-dot ${g.biz?'set-biz':''}" title="Business"></div><div class="goal-dot ${g.personal?'set-per':''}" title="Personal"></div></div></td><td><div class="lb-checkins">${m.score}</div><div class="lb-rate">${pct>0?pct+'% rate':'—'}</div></td><td><div class="lb-bar-wrap"><div class="lb-bar-bg"><div class="lb-bar-fill" style="width:${pct}%"></div></div></div></td></tr>;
-});
-html+='</tbody></table>';
-document.getElementById('view-leaderboard').innerHTML=html;
+function renderMembers() {
+  var html = '<div class="members-grid">';
+  for (var i = 0; i < MEMBERS.length; i++) {
+    var m = MEMBERS[i];
+    var g = goalsData[m.name] || {};
+    var score = getScore(m.name);
+    var pct = weeksGone > 0 ? Math.round((score / weeksGone) * 100) : 0;
+    var ftxt = g.fitness || 'Not set yet';
+    var btxt = g.biz || 'Not set yet';
+    var ptxt = g.personal || 'Not set yet';
+    var fcls = g.fitness ? 'goal-text' : 'goal-empty';
+    var bcls = g.biz ? 'goal-text' : 'goal-empty';
+    var pcls = g.personal ? 'goal-text' : 'goal-empty';
+    var rwrd = g.reward ? 'Win: ' + g.reward : 'Reward not set';
+    var stke = g.stake ? 'Miss: ' + g.stake : 'Stake not set';
+    var rwcls = g.reward ? 'stake-tag stake-win' : 'stake-tag';
+    var stcls = g.stake ? 'stake-tag stake-lose' : 'stake-tag';
+    html += '<div class="member-card">';
+    html += '<div class="mc-top">';
+    html += '<div class="mc-avatar" style="background:' + m.bg + ';color:' + m.color + ';">' + m.initials + '</div>';
+    html += '<div><div class="mc-name">' + m.name + '</div><div class="mc-state">' + m.state + ' - ' + score + ' check-in' + (score !== 1 ? 's' : '') + '</div></div>';
+    html += '<button class="mc-edit-btn" onclick="openEditModal(' + i + ')">Edit</button>';
+    html += '</div>';
+    html += '<div class="goals-stack">';
+    html += '<div class="goal-row fit"><div class="goal-tag">Fitness</div><div class="' + fcls + '">' + ftxt + '</div></div>';
+    html += '<div class="goal-row biz"><div class="goal-tag">Business</div><div class="' + bcls + '">' + btxt + '</div></div>';
+    html += '<div class="goal-row per"><div class="goal-tag">Personal</div><div class="' + pcls + '">' + ptxt + '</div></div>';
+    html += '</div>';
+    html += '<div class="stakes-row"><span class="' + rwcls + '">' + rwrd + '</span><span class="' + stcls + '">' + stke + '</span></div>';
+    html += '<div class="mc-pb-label"><span>Consistency</span><span>' + pct + '%</span></div>';
+    html += '<div class="mc-pb-bg"><div class="mc-pb-fill" style="width:' + pct + '%"></div></div>';
+    html += '</div>';
+  }
+  html += '</div>';
+  document.getElementById('view-members').innerHTML = html;
 }
-function renderMembers(){
-let html='<div class="members-grid">';
-MEMBERS.forEach((m,i)=>{
-const g=goalsData[m.name]||{};const score=getScore(m.name);const pct=weeksGone>0?Math.round((score/weeksGone)*100):0;
-html+=<div class="member-card"><div class="mc-top"><div class="mc-avatar" style="background:${m.bg};color:${m.color};">${m.initials}</div><div><div class="mc-name">${m.name}</div><div class="mc-state">${m.state} · ${score} check-in${score!==1?'s':''}</div></div><button class="mc-edit-btn" onclick="openEditModal(${i})">Edit</button></div><div class="goals-stack"><div class="goal-row fit"><div class="goal-tag">Fitness</div><div class="${g.fitness?'goal-text':'goal-empty'}">${g.fitness||'Not set yet'}</div></div><div class="goal-row biz"><div class="goal-tag">Business</div><div class="${g.biz?'goal-text':'goal-empty'}">${g.biz||'Not set yet'}</div></div><div class="goal-row per"><div class="goal-tag">Personal</div><div class="${g.personal?'goal-text':'goal-empty'}">${g.personal||'Not set yet'}</div></div></div><div class="stakes-row"><span class="stake-tag ${g.reward?'stake-win':''}">${g.reward?'Win: '+g.reward:'<span class="stake-empty">Reward not set</span>'}</span><span class="stake-tag ${g.stake?'stake-lose':''}">${g.stake?'Miss: '+g.stake:'<span class="stake-empty">Stake not set</span>'}</span></div><div class="mc-pb-label"><span>Consistency</span><span>${pct}%</span></div><div class="mc-pb-bg"><div class="mc-pb-fill" style="width:${pct}%"></div></div></div>;
-});
-html+='</div>';
-document.getElementById('view-members').innerHTML=html;
+function renderCheckIns() {
+  var html = '';
+  for (var i = 0; i < MEMBERS.length; i++) {
+    var m = MEMBERS[i];
+    var cins = checkinsData[m.name] || {};
+    var score = Object.keys(cins).length;
+    var cells = '';
+    for (var w = 1; w <= 13; w++) {
+      var done = cins[w];
+      var cls = 'wk-future';
+      var label = '' + w;
+      if (w < currentWeek) { cls = done ? 'wk-done' : 'wk-miss'; label = done ? 'v' : 'x'; }
+      else if (w === currentWeek) { cls = 'wk-current'; label = '>'; }
+      var click = w === currentWeek ? ' onclick="openCiModal(' + i + ',' + w + ')"' : '';
+      cells += '<div class="wk-cell ' + cls + '" title="Week ' + w + '"' + click + '>' + label + '</div>';
+    }
+    html += '<div class="ci-member">';
+    html += '<div class="ci-header">';
+    html += '<div class="lb-avatar" style="background:' + m.bg + ';color:' + m.color + ';width:36px;height:36px;font-size:12px;">' + m.initials + '</div>';
+    html += '<div class="ci-name">' + m.name + '</div>';
+    html += '<div class="ci-count">' + score + ' / 13 weeks</div>';
+    html += '</div>';
+    html += '<div class="week-track">' + cells + '</div>';
+    html += '<div class="ci-btns">';
+    html += '<button class="ci-btn ci-btn-primary" onclick="openCiModal(' + i + ',' + currentWeek + ')">Log week ' + currentWeek + ' check-in</button>';
+    html += '<button class="ci-btn ci-btn-secondary" onclick="openEditModal(' + i + ')">Edit goals</button>';
+    html += '</div></div><hr class="ci-divider">';
+  }
+  document.getElementById('view-checkins').innerHTML = html;
 }
-function renderCheckIns(){
-let html='';
-MEMBERS.forEach((m,i)=>{
-const cins=checkinsData[m.name]||{};const score=Object.values(cins).length;
-let cells='';
-for(let w=1;w<=13;w++){
-const done=cins[w];let cls='wk-future',label=w;
-if(w<currentWeek){cls=done?'wk-done':'wk-miss';label=done?'✓':'✗';}
-else if(w===currentWeek){cls='wk-current';label='→';}
-const clickable=w===currentWeek?onclick="openCiModal(${i},${w})":''
-cells+=<div class="wk-cell ${cls}" title="Week ${w}" ${clickable}>${label}</div>;
+function renderRules() {
+  var rules = [
+    'Goals are locked by April 9th - end of Week 1. No changes after that. Own what you commit to.',
+    'Check-in is due every Sunday by 11:59 PM local time. Log it yourself. Miss the window, it counts as a miss.',
+    'Each week you self-report fitness, business, and personal progress. Honest self-assessment only - the group will call you out.',
+    'Final verdict on goal achievement is decided on the July 7th group call. Evidence required: data, screenshots, receipts.',
+    'Stakes are non-negotiable. Agreed upfront, enforced by the group. No renegotiating at the finish line.',
+    'No ghosting. Two or more weeks dark without communicating equals auto-forfeit of your stake. Life happens - talk to the group.',
+    'Monthly group call: first Thursday of each month. Everyone reports in 3 minutes or less.',
+    'The leaderboard tracks check-in consistency throughout. Final rankings are based on goals actually achieved by June 30th.',
+    'Brotherhood rule: if someone is struggling, reach out privately before calling it out on the call.',
+    'June 30th is the hard stop. No extensions. Summer gathering celebrates the winners and roasts the rest.'
+  ];
+  var tl = [
+    ['Apr 2','Challenge begins'],
+    ['Apr 9','Goals locked - no changes after this'],
+    ['May 7','Month 1 group call'],
+    ['Jun 5','Month 2 group call and final push'],
+    ['Jun 30','Hard stop - all evidence submitted'],
+    ['Jul 7','Verdict call and final leaderboard'],
+    ['Jul/Aug','Summer gathering: winners celebrated, losers roasted']
+  ];
+  var html = '<ul class="rules-list">';
+  for (var i = 0; i < rules.length; i++) {
+    var num = (i + 1) < 10 ? '0' + (i + 1) : '' + (i + 1);
+    html += '<li class="rule-item"><div class="rule-num">' + num + '</div><div class="rule-text">' + rules[i] + '</div></li>';
+  }
+  html += '</ul><div class="timeline-grid">';
+  for (var i = 0; i < tl.length; i++) {
+    html += '<div class="tl-date">' + tl[i][0] + '</div><div class="tl-desc">' + tl[i][1] + '</div>';
+  }
+  html += '</div>';
+  document.getElementById('view-rules').innerHTML = html;
 }
-html+=<div class="ci-member"><div class="ci-header"><div class="lb-avatar" style="background:${m.bg};color:${m.color};width:36px;height:36px;font-size:12px;">${m.initials}</div><div class="ci-name">${m.name}</div><div class="ci-count">${score} / 13 weeks</div></div><div class="week-track">${cells}</div><div class="ci-btns"><button class="ci-btn ci-btn-primary" onclick="openCiModal(${i},${currentWeek})">Log week ${currentWeek} check-in</button><button class="ci-btn ci-btn-secondary" onclick="openEditModal(${i})">Edit goals</button></div></div><hr class="ci-divider">;
-});
-document.getElementById('view-checkins').innerHTML=html;
+function renderAll() { renderLeaderboard(); renderMembers(); renderCheckIns(); renderRules(); updateStats(); }
+var editingMember = null;
+function openEditModal(idx) {
+  editingMember = idx;
+  var m = MEMBERS[idx];
+  var g = goalsData[m.name] || {};
+  document.getElementById('modal-name').textContent = m.name;
+  document.getElementById('ef-fitness').value = g.fitness || '';
+  document.getElementById('ef-biz').value = g.biz || '';
+  document.getElementById('ef-personal').value = g.personal || '';
+  document.getElementById('ef-reward').value = g.reward || '';
+  document.getElementById('ef-stake').value = g.stake || '';
+  document.getElementById('save-status').textContent = '';
+  document.getElementById('edit-modal').classList.add('open');
 }
-function renderRules(){
-const rules=['Goals are locked by April 9th — end of Week 1. No changes after that. Own what you commit to.','Check-in is due every Sunday by 11:59 PM local time. Log it yourself. Miss the window, it counts as a miss.','Each week you self-report fitness, business, and personal progress. Honest self-assessment only — the group will call you out.','Final verdict on goal achievement is decided on the July 7th group call. Evidence required: data, screenshots, receipts.','Stakes are non-negotiable. Agreed upfront, enforced by the group. No renegotiating at the finish line.','No ghosting. Two or more weeks dark without communicating = auto-forfeit of your stake. Life happens — talk to the group.','Monthly group call: first Thursday of each month. Everyone reports in 3 minutes or less. Wins, struggles, and course corrections only.','The leaderboard tracks check-in consistency throughout. Final rankings are based on goals actually achieved by June 30th.','Brotherhood rule: if someone is struggling, reach out privately before calling it out on the call. We push each other — we don't pile on.','June 30th is the hard stop. No extensions. Summer gathering celebrates the winners and roasts the rest — all in good spirit.'];
-const tl=[['Apr 2','Challenge begins'],['Apr 9','Goals locked — no changes after this'],['May 7','Month 1 group call'],['Jun 5','Month 2 group call + final accountability push'],['Jun 30','Hard stop — all evidence submitted'],['Jul 7','Verdict call + final leaderboard'],['Jul / Aug','Summer gathering: winners celebrated, losers roasted']];
-let rHtml='<ul class="rules-list">';
-rules.forEach((r,i)=>{rHtml+=<li class="rule-item"><div class="rule-num">${String(i+1).padStart(2,'0')}</div><div class="rule-text">${r}</div></li>;});
-rHtml+='</ul><div class="timeline-grid">';
-tl.forEach(([d,t])=>{rHtml+=<div class="tl-date">${d}</div><div class="tl-desc">${t}</div>;});
-rHtml+='</div>';
-document.getElementById('view-rules').innerHTML=rHtml;
+function saveGoals() {
+  var m = MEMBERS[editingMember];
+  var payload = {
+    member_name: m.name,
+    fitness: document.getElementById('ef-fitness').value.trim(),
+    biz: document.getElementById('ef-biz').value.trim(),
+    personal: document.getElementById('ef-personal').value.trim(),
+    reward: document.getElementById('ef-reward').value.trim(),
+    stake: document.getElementById('ef-stake').value.trim()
+  };
+  document.getElementById('save-status').textContent = 'Saving...';
+  db.from('goals_p101').upsert(payload, {onConflict: 'member_name'}).then(function(res) {
+    if (res.error) { document.getElementById('save-status').textContent = 'Error: ' + res.error.message; return; }
+    goalsData[m.name] = payload;
+    document.getElementById('save-status').textContent = 'Saved!';
+    setTimeout(function() { closeModal('edit-modal'); renderMembers(); renderLeaderboard(); showToast('Goals saved for ' + m.name, 'success'); }, 600);
+  });
 }
-let editingMember=null;
-function openEditModal(idx){
-editingMember=idx;const m=MEMBERS[idx];const g=goalsData[m.name]||{};
-document.getElementById('modal-name').textContent=m.name;
-document.getElementById('ef-fitness').value=g.fitness||'';
-document.getElementById('ef-biz').value=g.biz||'';
-document.getElementById('ef-personal').value=g.personal||'';
-document.getElementById('ef-reward').value=g.reward||'';
-document.getElementById('ef-stake').value=g.stake||'';
-document.getElementById('save-status').textContent='';
-document.getElementById('edit-modal').classList.add('open');
+var ciMemberIdx = null;
+var ciWeekNum = null;
+function openCiModal(idx, week) {
+  ciMemberIdx = idx;
+  ciWeekNum = week;
+  var m = MEMBERS[idx];
+  var g = goalsData[m.name] || {};
+  document.getElementById('ci-week-num').textContent = week;
+  document.getElementById('ci-modal-member').textContent = m.name + ' - ' + m.state;
+  document.getElementById('ci-notes').value = '';
+  document.getElementById('ci-save-status').textContent = '';
+  var goals = [
+    {cls:'fit', label:'Fitness', text: g.fitness || 'Goal not set yet'},
+    {cls:'biz', label:'Business', text: g.biz || 'Goal not set yet'},
+    {cls:'per', label:'Personal', text: g.personal || 'Goal not set yet'}
+  ];
+  var gHtml = '';
+  for (var i = 0; i < goals.length; i++) {
+    var goal = goals[i];
+    gHtml += '<div class="ci-goal-item ' + goal.cls + '">';
+    gHtml += '<div class="ci-goal-label">' + goal.label + '</div>';
+    gHtml += '<div class="ci-goal-desc">' + goal.text + '</div>';
+    gHtml += '<div class="ci-check">';
+    gHtml += '<label><input type="radio" name="ci-' + i + '" value="win"> On track</label>';
+    gHtml += '<label><input type="radio" name="ci-' + i + '" value="miss"> Missed</label>';
+    gHtml += '</div></div>';
+  }
+  document.getElementById('ci-goals-display').innerHTML = gHtml;
+  document.getElementById('ci-modal').classList.add('open');
 }
-async function saveGoals(){
-const m=MEMBERS[editingMember];
-const payload={member_name:m.name,fitness:document.getElementById('ef-fitness').value.trim(),biz:document.getElementById('ef-biz').value.trim(),personal:document.getElementById('ef-personal').value.trim(),reward:document.getElementById('ef-reward').value.trim(),stake:document.getElementById('ef-stake').value.trim()};
-document.getElementById('save-status').textContent='Saving...';
-const{error}=await db.from('goals_p101').upsert(payload,{onConflict:'member_name'});
-if(error){document.getElementById('save-status').textContent='Error: '+error.message;return;}
-goalsData[m.name]=payload;
-document.getElementById('save-status').textContent='Saved!';
-setTimeout(()=>{closeModal('edit-modal');renderMembers();renderLeaderboard();showToast('Goals saved for '+m.name,'success');},600);
+function saveCheckIn() {
+  var m = MEMBERS[ciMemberIdx];
+  var fc = document.querySelector('input[name="ci-0"]:checked');
+  var bc = document.querySelector('input[name="ci-1"]:checked');
+  var pc = document.querySelector('input[name="ci-2"]:checked');
+  var payload = {
+    member_name: m.name,
+    week_number: ciWeekNum,
+    fitness_status: fc ? fc.value : null,
+    biz_status: bc ? bc.value : null,
+    personal_status: pc ? pc.value : null,
+    notes: document.getElementById('ci-notes').value.trim(),
+    submitted_at: new Date().toISOString()
+  };
+  document.getElementById('ci-save-status').textContent = 'Saving...';
+  db.from('checkins_p101').upsert(payload, {onConflict: 'member_name,week_number'}).then(function(res) {
+    if (res.error) { document.getElementById('ci-save-status').textContent = 'Error: ' + res.error.message; return; }
+    if (!checkinsData[m.name]) checkinsData[m.name] = {};
+    checkinsData[m.name][ciWeekNum] = payload;
+    document.getElementById('ci-save-status').textContent = 'Check-in submitted!';
+    setTimeout(function() { closeModal('ci-modal'); renderCheckIns(); renderLeaderboard(); updateStats(); showToast('Week ' + ciWeekNum + ' check-in saved for ' + m.name, 'success'); }, 600);
+  });
 }
-let ciMemberIdx=null,ciWeekNum=null;
-function openCiModal(idx,week){
-ciMemberIdx=idx;ciWeekNum=week;const m=MEMBERS[idx];const g=goalsData[m.name]||{};
-document.getElementById('ci-week-num').textContent=week;
-document.getElementById('ci-modal-member').textContent=m.name+' · '+m.state;
-document.getElementById('ci-notes').value='';
-document.getElementById('ci-save-status').textContent='';
-const goals=[{cls:'fit',label:'Fitness',text:g.fitness||'Goal not set yet'},{cls:'biz',label:'Business',text:g.biz||'Goal not set yet'},{cls:'per',label:'Personal',text:g.personal||'Goal not set yet'}];
-let gHtml='';
-goals.forEach((g,gi)=>{gHtml+=<div class="ci-goal-item ${g.cls}"><div class="ci-goal-label">${g.label}</div><div class="ci-goal-desc">${g.text}</div><div class="ci-check"><label><input type="radio" name="ci-${gi}" value="win"> On track</label><label><input type="radio" name="ci-${gi}" value="miss"> Missed</label></div></div>;});
-document.getElementById('ci-goals-display').innerHTML=gHtml;
-document.getElementById('ci-modal').classList.add('open');
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function switchTab(id, btn) {
+  var views = document.querySelectorAll('.view');
+  for (var i = 0; i < views.length; i++) views[i].classList.remove('active');
+  var tabs = document.querySelectorAll('.nav-tab');
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+  document.getElementById('view-' + id).classList.add('active');
+  btn.classList.add('active');
 }
-async function saveCheckIn(){
-const m=MEMBERS[ciMemberIdx];
-const payload={member_name:m.name,week_number:ciWeekNum,fitness_status:document.querySelector('input[name="ci-0"]:checked')?.value||null,biz_status:document.querySelector('input[name="ci-1"]:checked')?.value||null,personal_status:document.querySelector('input[name="ci-2"]:checked')?.value||null,notes:document.getElementById('ci-notes').value.trim(),submitted_at:new Date().toISOString()};
-document.getElementById('ci-save-status').textContent='Saving...';
-const{error}=await db.from('checkins_p101').upsert(payload,{onConflict:'member_name,week_number'});
-if(error){document.getElementById('ci-save-status').textContent='Error: '+error.message;return;}
-if(!checkinsData[m.name])checkinsData[m.name]={};
-checkinsData[m.name][ciWeekNum]=payload;
-document.getElementById('ci-save-status').textContent='Check-in submitted!';
-setTimeout(()=>{closeModal('ci-modal');renderCheckIns();renderLeaderboard();updateStats();showToast('Week '+ciWeekNum+' check-in saved for '+m.name,'success');},600);
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (type || 'success') + ' show';
+  setTimeout(function() { t.classList.remove('show'); }, 3000);
 }
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-function switchTab(id,btn){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));document.getElementById('view-'+id).classList.add('active');btn.classList.add('active');}
-function showToast(msg,type='success'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type+' show';setTimeout(()=>{t.classList.remove('show');},3000);}
-document.querySelectorAll('.modal-overlay').forEach(overlay=>{overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('open');});});
+var overlays = document.querySelectorAll('.modal-overlay');
+for (var i = 0; i < overlays.length; i++) {
+  overlays[i].addEventListener('click', function(e) { if (e.target === this) this.classList.remove('open'); });
+}
 loadAll();
 </script>
 </body>
