@@ -8,138 +8,133 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  :root {
-    --black: #0A0A0A; --white: #F5F2ED; --off: #1A1A1A; --border: rgba(245,242,237,0.1); --border-mid: rgba(245,242,237,0.2); --muted: rgba(245,242,237,0.45); --accent: #00E5FF; --red: #FF4444; --green: #00C97A; --blue: #4A9EFF; --amber: #FFB800; --fit-bg: rgba(0,201,122,0.08); --fit-border: rgba(0,201,122,0.25); --fit-text: #00C97A; --biz-bg: rgba(74,158,255,0.08); --biz-border: rgba(74,158,255,0.25); --biz-text: #4A9EFF; --per-bg: rgba(255,184,0,0.08); --per-border: rgba(255,184,0,0.25); --per-text: #FFB800;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
-  .site-header { border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 64px; position: sticky; top: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(12px); z-index: 100; }
-  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.08em; color: var(--white); display: flex; align-items: center; gap: 10px; }
-  .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; }
-  .header-meta { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; text-align: right; }
-  .hero { padding: 3rem 2rem 2rem; border-bottom: 1px solid var(--border); }
-  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 8vw, 88px); line-height: 0.9; letter-spacing: 0.04em; margin-bottom: 1rem; }
-  .hero-title span { color: var(--accent); }
-  .hero-sub { font-size: 14px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.05em; }
-  .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--border); }
-  .stat-cell { padding: 1.5rem 2rem; border-right: 1px solid var(--border); }
-  .stat-cell:last-child { border-right: none; }
-  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--accent); line-height: 1; margin-bottom: 4px; }
-  .stat-label { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
-  .nav-tabs { display: flex; border-bottom: 1px solid var(--border); padding: 0 2rem; overflow-x: auto; }
-  .nav-tab { padding: 1rem 1.5rem; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; letter-spacing: 0.05em; text-transform: uppercase; font-family: 'DM Mono', monospace; background: none; border-top: none; border-left: none; border-right: none; transition: color 0.2s; }
-  .nav-tab:hover { color: var(--white); }
-  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-  .main { padding: 2rem; }
-  .view { display: none; }
-  .view.active { display: block; }
-  .lb-table { width: 100%; border-collapse: collapse; }
-  .lb-table th { text-align: left; font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; padding: 0 1rem 1rem; border-bottom: 1px solid var(--border); }
-  .lb-row { border-bottom: 1px solid var(--border); transition: background 0.15s; cursor: pointer; }
-  .lb-row:hover { background: rgba(245,242,237,0.03); }
-  .lb-row td { padding: 1rem; vertical-align: middle; }
-  .lb-rank { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--border-mid); width: 48px; }
-  .lb-rank.p1 { color: var(--amber); } .lb-rank.p2 { color: #888; } .lb-rank.p3 { color: #7a4f2e; }
-  .lb-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; }
-  .lb-name-cell { display: flex; align-items: center; gap: 12px; }
-  .lb-fullname { font-weight: 500; font-size: 15px; }
-  .lb-state { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
-  .lb-goals-set { display: flex; gap: 4px; }
-  .goal-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border-mid); }
-  .goal-dot.set-fit { background: var(--green); } .goal-dot.set-biz { background: var(--blue); } .goal-dot.set-per { background: var(--amber); }
-  .lb-checkins { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--accent); }
-  .lb-rate { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
-  .lb-bar-wrap { width: 120px; }
-  .lb-bar-bg { height: 4px; background: var(--off); border-radius: 99px; overflow: hidden; }
-  .lb-bar-fill { height: 100%; background: var(--accent); border-radius: 99px; }
-  .members-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
-  .member-card { background: var(--black); padding: 1.5rem; }
-  .mc-top { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; }
-  .mc-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0; }
-  .mc-name { font-weight: 600; font-size: 16px; }
-  .mc-state { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
-  .mc-edit-btn { margin-left: auto; font-size: 11px; padding: 5px 12px; border: 1px solid var(--border-mid); border-radius: 4px; background: transparent; color: var(--muted); cursor: pointer; font-family: 'DM Mono', monospace; letter-spacing: 0.05em; text-transform: uppercase; transition: all 0.15s; }
-  .mc-edit-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .goals-stack { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
-  .goal-row { border-radius: 6px; padding: 10px 12px; display: flex; gap: 10px; align-items: flex-start; }
-  .goal-row.fit { background: var(--fit-bg); border: 1px solid var(--fit-border); }
-  .goal-row.biz { background: var(--biz-bg); border: 1px solid var(--biz-border); }
-  .goal-row.per { background: var(--per-bg); border: 1px solid var(--per-border); }
-  .goal-tag { font-size: 10px; font-family: 'DM Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; min-width: 52px; padding-top: 1px; }
-  .goal-row.fit .goal-tag { color: var(--fit-text); } .goal-row.biz .goal-tag { color: var(--biz-text); } .goal-row.per .goal-tag { color: var(--per-text); }
-  .goal-text { font-size: 13px; color: var(--white); }
-  .goal-empty { font-size: 13px; color: var(--muted); font-style: italic; }
-  .stakes-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; }
-  .stake-tag { font-size: 11px; padding: 4px 10px; border-radius: 4px; font-family: 'DM Mono', monospace; }
-  .stake-win { background: rgba(0,201,122,0.1); color: var(--green); border: 1px solid rgba(0,201,122,0.2); }
-  .stake-lose { background: rgba(255,68,68,0.1); color: var(--red); border: 1px solid rgba(255,68,68,0.2); }
-  .stake-empty { color: var(--muted); font-style: italic; }
-  .mc-pb-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 4px; font-family: 'DM Mono', monospace; }
-  .mc-pb-bg { height: 3px; background: var(--off); border-radius: 99px; overflow: hidden; }
-  .mc-pb-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.5s; }
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center; padding: 1rem; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: #111; border: 1px solid var(--border-mid); border-radius: 12px; padding: 2rem; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; }
-  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--accent); }
-  .field-group { margin-bottom: 1.25rem; }
-  .field-label { display: block; font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
-  .field-input { width: 100%; background: var(--off); border: 1px solid var(--border-mid); border-radius: 6px; padding: 10px 14px; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; }
-  .field-input:focus { border-color: var(--accent); }
-  .field-input::placeholder { color: rgba(245,242,237,0.25); }
-  .modal-actions { display: flex; gap: 10px; margin-top: 1.5rem; }
-  .btn-save { flex: 1; background: var(--accent); color: var(--black); border: none; border-radius: 6px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: opacity 0.15s; }
-  .btn-save:hover { opacity: 0.88; }
-  .btn-cancel { padding: 12px 20px; background: transparent; border: 1px solid var(--border-mid); border-radius: 6px; color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px; }
-  .save-status { font-size: 13px; color: var(--green); font-family: 'DM Mono', monospace; margin-top: 8px; min-height: 20px; }
-  .ci-member { margin-bottom: 2rem; }
-  .ci-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
-  .ci-name { font-weight: 600; font-size: 15px; }
-  .ci-count { margin-left: auto; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); }
-  .week-track { display: grid; grid-template-columns: repeat(13, 1fr); gap: 4px; margin-bottom: 10px; }
-  .wk-cell { aspect-ratio: 1; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-family: 'DM Mono', monospace; font-weight: 500; border: 1px solid var(--border); cursor: default; }
-  .wk-done { background: rgba(0,201,122,0.15); border-color: rgba(0,201,122,0.4); color: var(--green); }
-  .wk-miss { background: rgba(255,68,68,0.1); border-color: rgba(255,68,68,0.3); color: var(--red); }
-  .wk-current { background: rgba(0,229,255,0.12); border-color: rgba(0,229,255,0.4); color: var(--accent); cursor: pointer; }
-  .wk-future { color: rgba(245,242,237,0.2); border-color: var(--border); }
-  .ci-btns { display: flex; gap: 8px; flex-wrap: wrap; }
-  .ci-btn { font-size: 12px; padding: 7px 16px; border-radius: 6px; cursor: pointer; font-family: 'DM Mono', monospace; letter-spacing: 0.04em; transition: all 0.15s; }
-  .ci-btn-primary { background: var(--accent); color: var(--black); border: none; font-weight: 600; }
-  .ci-btn-secondary { background: transparent; color: var(--muted); border: 1px solid var(--border-mid); }
-  .ci-divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
-  .ci-modal-member { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; margin-bottom: 1rem; }
-  .checkin-goals { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
-  .ci-goal-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-radius: 6px; }
-  .ci-goal-item.fit { background: var(--fit-bg); border: 1px solid var(--fit-border); }
-  .ci-goal-item.biz { background: var(--biz-bg); border: 1px solid var(--biz-border); }
-  .ci-goal-item.per { background: var(--per-bg); border: 1px solid var(--per-border); }
-  .ci-goal-label { font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: 0.07em; text-transform: uppercase; min-width: 52px; padding-top: 2px; }
-  .ci-goal-item.fit .ci-goal-label { color: var(--fit-text); } .ci-goal-item.biz .ci-goal-label { color: var(--biz-text); } .ci-goal-item.per .ci-goal-label { color: var(--per-text); }
-  .ci-goal-desc { font-size: 13px; flex: 1; }
-  .ci-check { display: flex; flex-direction: column; gap: 6px; margin-left: auto; }
-  .ci-check label { display: flex; align-items: center; gap: 6px; font-size: 12px; font-family: 'DM Mono', monospace; cursor: pointer; white-space: nowrap; }
-  input[type=radio] { accent-color: var(--accent); }
-  .ci-notes-area { width: 100%; background: var(--off); border: 1px solid var(--border-mid); border-radius: 6px; padding: 10px 14px; color: var(--white); font-size: 13px; font-family: 'DM Sans', sans-serif; outline: none; resize: vertical; min-height: 80px; }
-  .ci-notes-area::placeholder { color: rgba(245,242,237,0.25); }
-  .rules-list { list-style: none; }
-  .rule-item { display: flex; gap: 1.5rem; padding: 1.25rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
-  .rule-item:last-child { border-bottom: none; }
-  .rule-num { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--accent); line-height: 1; min-width: 36px; flex-shrink: 0; }
-  .rule-text { font-size: 14px; color: var(--white); line-height: 1.6; padding-top: 4px; }
-  .timeline-grid { display: grid; grid-template-columns: 80px 1fr; gap: 0; margin-top: 2rem; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-  .tl-date { padding: 12px 16px; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--accent); background: rgba(0,229,255,0.04); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  .tl-desc { padding: 12px 16px; font-size: 13px; color: var(--muted); border-bottom: 1px solid var(--border); }
-  .tl-date:last-of-type, .tl-desc:last-of-type { border-bottom: none; }
-  .loading-state { display: flex; align-items: center; justify-content: center; padding: 4rem; font-family: 'DM Mono', monospace; font-size: 13px; color: var(--muted); gap: 10px; }
-  .spinner { width: 16px; height: 16px; border: 2px solid var(--border-mid); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--off); border: 1px solid var(--border-mid); border-radius: 8px; padding: 12px 20px; font-size: 13px; font-family: 'DM Mono', monospace; z-index: 300; transform: translateY(100px); opacity: 0; transition: all 0.3s; }
-  .toast.show { transform: translateY(0); opacity: 1; }
-  .toast.success { border-color: rgba(0,201,122,0.4); color: var(--green); }
-  .toast.error { border-color: rgba(255,68,68,0.4); color: var(--red); }
-  @media (max-width: 640px) {
-    .stats-bar { grid-template-columns: repeat(2, 1fr); }
-    .site-header { padding: 0 1rem; } .hero { padding: 2rem 1rem 1.5rem; } .main { padding: 1.5rem 1rem; } .nav-tabs { padding: 0 1rem; } .stat-cell { padding: 1rem; } .week-track { gap: 3px; } .members-grid { grid-template-columns: 1fr; }
-  }
+:root{--black:#0A0A0A;--white:#F5F2ED;--off:#1A1A1A;--border:rgba(245,242,237,0.1);--border-mid:rgba(245,242,237,0.2);--muted:rgba(245,242,237,0.45);--accent:#00E5FF;--red:#FF4444;--green:#00C97A;--blue:#4A9EFF;--amber:#FFB800;--fit-bg:rgba(0,201,122,0.08);--fit-border:rgba(0,201,122,0.25);--fit-text:#00C97A;--biz-bg:rgba(74,158,255,0.08);--biz-border:rgba(74,158,255,0.25);--biz-text:#4A9EFF;--per-bg:rgba(255,184,0,0.08);--per-border:rgba(255,184,0,0.25);--per-text:#FFB800}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+.site-header{border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;background:rgba(10,10,10,0.95);backdrop-filter:blur(12px);z-index:100}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.08em;color:var(--white);display:flex;align-items:center;gap:10px}
+.logo-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;display:inline-block}
+.header-meta{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right}
+.hero{padding:3rem 2rem 2rem;border-bottom:1px solid var(--border)}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,8vw,88px);line-height:0.9;letter-spacing:0.04em;margin-bottom:1rem}
+.hero-title span{color:var(--accent)}
+.hero-sub{font-size:14px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:0.05em}
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border)}
+.stat-cell{padding:1.5rem 2rem;border-right:1px solid var(--border)}
+.stat-cell:last-child{border-right:none}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--accent);line-height:1;margin-bottom:4px}
+.stat-label{font-size:11px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;font-family:'DM Mono',monospace}
+.nav-tabs{display:flex;border-bottom:1px solid var(--border);padding:0 2rem;overflow-x:auto}
+.nav-tab{padding:1rem 1.5rem;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;letter-spacing:0.05em;text-transform:uppercase;font-family:'DM Mono',monospace;background:none;border-top:none;border-left:none;border-right:none;transition:color 0.2s}
+.nav-tab:hover{color:var(--white)}
+.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.main{padding:2rem}
+.view{display:none}
+.view.active{display:block}
+.lb-table{width:100%;border-collapse:collapse}
+.lb-table th{text-align:left;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:0.08em;text-transform:uppercase;padding:0 1rem 1rem;border-bottom:1px solid var(--border)}
+.lb-row{border-bottom:1px solid var(--border);transition:background 0.15s;cursor:pointer}
+.lb-row:hover{background:rgba(245,242,237,0.03)}
+.lb-row td{padding:1rem;vertical-align:middle}
+.lb-rank{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--border-mid);width:48px}
+.lb-rank.p1{color:var(--amber)}.lb-rank.p2{color:#888}.lb-rank.p3{color:#7a4f2e}
+.lb-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.lb-name-cell{display:flex;align-items:center;gap:12px}
+.lb-fullname{font-weight:500;font-size:15px}
+.lb-state{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace}
+.lb-goals-set{display:flex;gap:4px}
+.goal-dot{width:8px;height:8px;border-radius:50%;background:var(--border-mid)}
+.goal-dot.set-fit{background:var(--green)}.goal-dot.set-biz{background:var(--blue)}.goal-dot.set-per{background:var(--amber)}
+.lb-checkins{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent)}
+.lb-rate{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace}
+.lb-bar-wrap{width:120px}
+.lb-bar-bg{height:4px;background:var(--off);border-radius:99px;overflow:hidden}
+.lb-bar-fill{height:100%;background:var(--accent);border-radius:99px}
+.members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1px;background:var(--border);border:1px solid var(--border)}
+.member-card{background:var(--black);padding:1.5rem}
+.mc-top{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem}
+.mc-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0}
+.mc-name{font-weight:600;font-size:16px}
+.mc-state{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace}
+.mc-edit-btn{margin-left:auto;font-size:11px;padding:5px 12px;border:1px solid var(--border-mid);border-radius:4px;background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Mono',monospace;letter-spacing:0.05em;text-transform:uppercase;transition:all 0.15s}
+.mc-edit-btn:hover{border-color:var(--accent);color:var(--accent)}
+.goals-stack{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
+.goal-row{border-radius:6px;padding:10px 12px;display:flex;gap:10px;align-items:flex-start}
+.goal-row.fit{background:var(--fit-bg);border:1px solid var(--fit-border)}
+.goal-row.biz{background:var(--biz-bg);border:1px solid var(--biz-border)}
+.goal-row.per{background:var(--per-bg);border:1px solid var(--per-border)}
+.goal-tag{font-size:10px;font-family:'DM Mono',monospace;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;min-width:52px;padding-top:1px}
+.goal-row.fit .goal-tag{color:var(--fit-text)}.goal-row.biz .goal-tag{color:var(--biz-text)}.goal-row.per .goal-tag{color:var(--per-text)}
+.goal-text{font-size:13px;color:var(--white)}
+.goal-empty{font-size:13px;color:var(--muted);font-style:italic}
+.stakes-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.stake-tag{font-size:11px;padding:4px 10px;border-radius:4px;font-family:'DM Mono',monospace}
+.stake-win{background:rgba(0,201,122,0.1);color:var(--green);border:1px solid rgba(0,201,122,0.2)}
+.stake-lose{background:rgba(255,68,68,0.1);color:var(--red);border:1px solid rgba(255,68,68,0.2)}
+.stake-empty{color:var(--muted);font-style:italic}
+.mc-pb-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;font-family:'DM Mono',monospace}
+.mc-pb-bg{height:3px;background:var(--off);border-radius:99px;overflow:hidden}
+.mc-pb-fill{height:100%;background:var(--accent);border-radius:99px;transition:width 0.5s}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:#111;border:1px solid var(--border-mid);border-radius:12px;padding:2rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.05em;margin-bottom:1.5rem;color:var(--accent)}
+.field-group{margin-bottom:1.25rem}
+.field-label{display:block;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.field-input{width:100%;background:var(--off);border:1px solid var(--border-mid);border-radius:6px;padding:10px 14px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s}
+.field-input:focus{border-color:var(--accent)}
+.field-input::placeholder{color:rgba(245,242,237,0.25)}
+.modal-actions{display:flex;gap:10px;margin-top:1.5rem}
+.btn-save{flex:1;background:var(--accent);color:var(--black);border:none;border-radius:6px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity 0.15s}
+.btn-save:hover{opacity:0.88}
+.btn-cancel{padding:12px 20px;background:transparent;border:1px solid var(--border-mid);border-radius:6px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px}
+.save-status{font-size:13px;color:var(--green);font-family:'DM Mono',monospace;margin-top:8px;min-height:20px}
+.ci-member{margin-bottom:2rem}
+.ci-header{display:flex;align-items:center;gap:12px;margin-bottom:1rem}
+.ci-name{font-weight:600;font-size:15px}
+.ci-count{margin-left:auto;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)}
+.week-track{display:grid;grid-template-columns:repeat(13,1fr);gap:4px;margin-bottom:10px}
+.wk-cell{aspect-ratio:1;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'DM Mono',monospace;font-weight:500;border:1px solid var(--border);cursor:default}
+.wk-done{background:rgba(0,201,122,0.15);border-color:rgba(0,201,122,0.4);color:var(--green)}
+.wk-miss{background:rgba(255,68,68,0.1);border-color:rgba(255,68,68,0.3);color:var(--red)}
+.wk-current{background:rgba(0,229,255,0.12);border-color:rgba(0,229,255,0.4);color:var(--accent);cursor:pointer}
+.wk-future{color:rgba(245,242,237,0.2);border-color:var(--border)}
+.ci-btns{display:flex;gap:8px;flex-wrap:wrap}
+.ci-btn{font-size:12px;padding:7px 16px;border-radius:6px;cursor:pointer;font-family:'DM Mono',monospace;letter-spacing:0.04em;transition:all 0.15s}
+.ci-btn-primary{background:var(--accent);color:var(--black);border:none;font-weight:600}
+.ci-btn-secondary{background:transparent;color:var(--muted);border:1px solid var(--border-mid)}
+.ci-divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
+.ci-modal-member{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:1rem}
+.checkin-goals{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem}
+.ci-goal-item{display:flex;align-items:flex-start;gap:12px;padding:12px;border-radius:6px}
+.ci-goal-item.fit{background:var(--fit-bg);border:1px solid var(--fit-border)}
+.ci-goal-item.biz{background:var(--biz-bg);border:1px solid var(--biz-border)}
+.ci-goal-item.per{background:var(--per-bg);border:1px solid var(--per-border)}
+.ci-goal-label{font-size:11px;font-family:'DM Mono',monospace;letter-spacing:0.07em;text-transform:uppercase;min-width:52px;padding-top:2px}
+.ci-goal-item.fit .ci-goal-label{color:var(--fit-text)}.ci-goal-item.biz .ci-goal-label{color:var(--biz-text)}.ci-goal-item.per .ci-goal-label{color:var(--per-text)}
+.ci-goal-desc{font-size:13px;flex:1}
+.ci-check{display:flex;flex-direction:column;gap:6px;margin-left:auto}
+.ci-check label{display:flex;align-items:center;gap:6px;font-size:12px;font-family:'DM Mono',monospace;cursor:pointer;white-space:nowrap}
+input[type=radio]{accent-color:var(--accent)}
+.ci-notes-area{width:100%;background:var(--off);border:1px solid var(--border-mid);border-radius:6px;padding:10px 14px;color:var(--white);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:80px}
+.ci-notes-area::placeholder{color:rgba(245,242,237,0.25)}
+.rules-list{list-style:none}
+.rule-item{display:flex;gap:1.5rem;padding:1.25rem 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.rule-item:last-child{border-bottom:none}
+.rule-num{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent);line-height:1;min-width:36px;flex-shrink:0}
+.rule-text{font-size:14px;color:var(--white);line-height:1.6;padding-top:4px}
+.timeline-grid{display:grid;grid-template-columns:80px 1fr;gap:0;margin-top:2rem;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.tl-date{padding:12px 16px;font-family:'DM Mono',monospace;font-size:12px;color:var(--accent);background:rgba(0,229,255,0.04);border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.tl-desc{padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)}
+.tl-date:last-of-type,.tl-desc:last-of-type{border-bottom:none}
+.loading-state{display:flex;align-items:center;justify-content:center;padding:4rem;font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);gap:10px}
+.spinner{width:16px;height:16px;border:2px solid var(--border-mid);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--off);border:1px solid var(--border-mid);border-radius:8px;padding:12px 20px;font-size:13px;font-family:'DM Mono',monospace;z-index:300;transform:translateY(100px);opacity:0;transition:all 0.3s}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-color:rgba(0,201,122,0.4);color:var(--green)}
+.toast.error{border-color:rgba(255,68,68,0.4);color:var(--red)}
+@media(max-width:640px){.stats-bar{grid-template-columns:repeat(2,1fr)}.site-header{padding:0 1rem}.hero{padding:2rem 1rem 1.5rem}.main{padding:1.5rem 1rem}.nav-tabs{padding:0 1rem}.stat-cell{padding:1rem}.week-track{gap:3px}.members-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -199,145 +194,147 @@
 </div>
 <div class="toast" id="toast"></div>
 <script>
-const SUPABASE_URL = 'https://mlbqyxpsrtztykwfagzo.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1sYnF5eHBzcnR6dHlrd2ZhZ3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNjM1MzcsImV4cCI6MjA5MDczOTUzN30.doQWAs6za2LjRh5vWacJryPWo24qINZRa3CaR6G5N8M';
-const MEMBERS = [
-{ name: 'Luke Schnacke',   initials: 'LS', state: 'OR', color: '#00E5FF', bg: 'rgba(0,229,255,0.15)' },
-{ name: 'Scott Vogeli',    initials: 'SV', state: 'CA', color: '#FF4FA0', bg: 'rgba(255,79,160,0.15)' },
-{ name: 'JP Rinylo',       initials: 'JP', state: 'NJ', color: '#FFB800', bg: 'rgba(255,184,0,0.15)' },
-{ name: "Fritz O'Connor",  initials: 'FO', state: 'KY', color: '#00C97A', bg: 'rgba(0,201,122,0.15)' },
-{ name: 'Zac Spencer',     initials: 'ZS', state: 'BC', color: '#B06FFF', bg: 'rgba(176,111,255,0.15)' },
+const SUPABASE_URL='https://mlbqyxpsrtztykwfagzo.supabase.co';
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1sYnF5eHBzcnR6dHlrd2ZhZ3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNjM1MzcsImV4cCI6MjA5MDczOTUzN30.doQWAs6za2LjRh5vWacJryPWo24qINZRa3CaR6G5N8M';
+const MEMBERS=[
+{name:'Luke Schnacke',initials:'LS',state:'OR',color:'#00E5FF',bg:'rgba(0,229,255,0.15)'},
+{name:'Scott Vogeli',initials:'SV',state:'CA',color:'#FF4FA0',bg:'rgba(255,79,160,0.15)'},
+{name:'JP Rinylo',initials:'JP',state:'NJ',color:'#FFB800',bg:'rgba(255,184,0,0.15)'},
+{name:"Fritz O'Connor",initials:'FO',state:'KY',color:'#00C97A',bg:'rgba(0,201,122,0.15)'},
+{name:'Zac Spencer',initials:'ZS',state:'BC',color:'#B06FFF',bg:'rgba(176,111,255,0.15)'},
 ];
-const START = new Date('2026-04-02');
-const END = new Date('2026-06-30');
-const now = new Date();
-const daysLeft = Math.max(0, Math.floor((END - now) / 86400000));
-const currentWeek = Math.min(13, Math.max(1, Math.ceil((now - START) / (7 * 86400000)) + 1));
-const weeksGone = Math.max(0, currentWeek - 1);
-document.getElementById('hdr-week').textContent = currentWeek;
-document.getElementById('stat-days').textContent = daysLeft;
-let goalsData = {}, checkinsData = {};
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-initLocalData();
-loadAll();
-function initLocalData() {
-MEMBERS.forEach(m => { goalsData[m.name] = { fitness:'', biz:'', personal:'', reward:'', stake:'' }; checkinsData[m.name] = {}; });
+const START=new Date('2026-04-02');
+const END=new Date('2026-06-30');
+const now=new Date();
+const daysLeft=Math.max(0,Math.floor((END-now)/86400000));
+const currentWeek=Math.min(13,Math.max(1,Math.ceil((now-START)/(7*86400000))+1));
+const weeksGone=Math.max(0,currentWeek-1);
+document.getElementById('hdr-week').textContent=currentWeek;
+document.getElementById('stat-days').textContent=daysLeft;
+let goalsData={},checkinsData={};
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+function initLocalData(){
+MEMBERS.forEach(m=>{goalsData[m.name]={fitness:'',biz:'',personal:'',reward:'',stake:''};checkinsData[m.name]={};});
 }
-async function loadAll() {
-try {
-const [gRes, cRes] = await Promise.all([db.from('goals_p101').select(''), db.from('checkins_p101').select('')]);
+async function loadAll(){
 initLocalData();
-(gRes.data || []).forEach(r => { goalsData[r.member_name] = r; });
-(cRes.data || []).forEach(r => { if (!checkinsData[r.member_name]) checkinsData[r.member_name] = {}; checkinsData[r.member_name][r.week_number] = r; });
-} catch(e) { showToast('Error loading data', 'error'); }
+try{
+const [gRes,cRes]=await Promise.all([db.from('goals_p101').select(''),db.from('checkins_p101').select('')]);
+if(gRes.data) gRes.data.forEach(r=>{goalsData[r.member_name]=r;});
+if(cRes.data) cRes.data.forEach(r=>{if(!checkinsData[r.member_name])checkinsData[r.member_name]={};checkinsData[r.member_name][r.week_number]=r;});
+}catch(e){
+console.error(e);
+showToast('Error loading data','error');
+}
 renderAll();
 }
-function renderAll() { renderLeaderboard(); renderMembers(); renderCheckIns(); renderRules(); updateStats(); }
-function getScore(name) { return Object.values(checkinsData[name] || {}).length; }
-function updateStats() {
-let total = 0, maxS = 0;
-MEMBERS.forEach(m => { const s = getScore(m.name); total += s; if (s > maxS) maxS = s; });
-const possible = MEMBERS.length * Math.max(1, weeksGone);
-const pct = possible > 0 ? Math.round((total / possible) * 100) : 0;
-document.getElementById('stat-checkins').textContent = total;
-document.getElementById('stat-streak').textContent = maxS;
-document.getElementById('stat-rate').textContent = pct + '%';
+function renderAll(){renderLeaderboard();renderMembers();renderCheckIns();renderRules();updateStats();}
+function getScore(name){return Object.values(checkinsData[name]||{}).length;}
+function updateStats(){
+let total=0,maxS=0;
+MEMBERS.forEach(m=>{const s=getScore(m.name);total+=s;if(s>maxS)maxS=s;});
+const possible=MEMBERS.length*Math.max(1,weeksGone);
+const pct=possible>0?Math.round((total/possible)*100):0;
+document.getElementById('stat-checkins').textContent=total;
+document.getElementById('stat-streak').textContent=maxS;
+document.getElementById('stat-rate').textContent=pct+'%';
 }
-function renderLeaderboard() {
-const sorted = MEMBERS.map(m => ({ ...m, score: getScore(m.name) })).sort((a,b) => b.score - a.score || a.name.localeCompare(b.name));
-let html = '<table class="lb-table"><thead><tr><th style="width:48px"></th><th>Member</th><th>Goals set</th><th>Check-ins</th><th style="width:140px">Consistency</th></tr></thead><tbody>';
-sorted.forEach((m, i) => {
-const rank = i + 1; const rankClass = rank <= 3 ? 'p' + rank : ''; const g = goalsData[m.name] || {}; const pct = weeksGone > 0 ? Math.round((m.score / weeksGone) * 100) : 0;
-html += <tr class="lb-row"><td><div class="lb-rank ${rankClass}">${rank}</div></td><td><div class="lb-name-cell"><div class="lb-avatar" style="background:${m.bg};color:${m.color};">${m.initials}</div><div><div class="lb-fullname">${m.name}</div><div class="lb-state">${m.state}</div></div></div></td><td><div class="lb-goals-set"><div class="goal-dot ${g.fitness?'set-fit':''}" title="Fitness"></div><div class="goal-dot ${g.biz?'set-biz':''}" title="Business"></div><div class="goal-dot ${g.personal?'set-per':''}" title="Personal"></div></div></td><td><div class="lb-checkins">${m.score}</div><div class="lb-rate">${pct > 0 ? pct+'% rate' : '—'}</div></td><td><div class="lb-bar-wrap"><div class="lb-bar-bg"><div class="lb-bar-fill" style="width:${pct}%"></div></div></div></td></tr>;
+function renderLeaderboard(){
+const sorted=MEMBERS.map(m=>({...m,score:getScore(m.name)})).sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name));
+let html='<table class="lb-table"><thead><tr><th style="width:48px"></th><th>Member</th><th>Goals set</th><th>Check-ins</th><th style="width:140px">Consistency</th></tr></thead><tbody>';
+sorted.forEach((m,i)=>{
+const rank=i+1;const rankClass=rank<=3?'p'+rank:'';const g=goalsData[m.name]||{};const pct=weeksGone>0?Math.round((m.score/weeksGone)*100):0;
+html+=<tr class="lb-row"><td><div class="lb-rank ${rankClass}">${rank}</div></td><td><div class="lb-name-cell"><div class="lb-avatar" style="background:${m.bg};color:${m.color};">${m.initials}</div><div><div class="lb-fullname">${m.name}</div><div class="lb-state">${m.state}</div></div></div></td><td><div class="lb-goals-set"><div class="goal-dot ${g.fitness?'set-fit':''}" title="Fitness"></div><div class="goal-dot ${g.biz?'set-biz':''}" title="Business"></div><div class="goal-dot ${g.personal?'set-per':''}" title="Personal"></div></div></td><td><div class="lb-checkins">${m.score}</div><div class="lb-rate">${pct>0?pct+'% rate':'—'}</div></td><td><div class="lb-bar-wrap"><div class="lb-bar-bg"><div class="lb-bar-fill" style="width:${pct}%"></div></div></div></td></tr>;
 });
-html += '</tbody></table>';
-document.getElementById('view-leaderboard').innerHTML = html;
+html+='</tbody></table>';
+document.getElementById('view-leaderboard').innerHTML=html;
 }
-function renderMembers() {
-let html = '<div class="members-grid">';
-MEMBERS.forEach((m, i) => {
-const g = goalsData[m.name] || {}; const score = getScore(m.name); const pct = weeksGone > 0 ? Math.round((score / weeksGone) * 100) : 0;
-html += <div class="member-card"><div class="mc-top"><div class="mc-avatar" style="background:${m.bg};color:${m.color};">${m.initials}</div><div><div class="mc-name">${m.name}</div><div class="mc-state">${m.state} · ${score} check-in${score!==1?'s':''}</div></div><button class="mc-edit-btn" onclick="openEditModal(${i})">Edit</button></div><div class="goals-stack"><div class="goal-row fit"><div class="goal-tag">Fitness</div><div class="${g.fitness?'goal-text':'goal-empty'}">${g.fitness||'Not set yet'}</div></div><div class="goal-row biz"><div class="goal-tag">Business</div><div class="${g.biz?'goal-text':'goal-empty'}">${g.biz||'Not set yet'}</div></div><div class="goal-row per"><div class="goal-tag">Personal</div><div class="${g.personal?'goal-text':'goal-empty'}">${g.personal||'Not set yet'}</div></div></div><div class="stakes-row"><span class="stake-tag ${g.reward?'stake-win':''}">${g.reward?'Win: '+g.reward:'<span class="stake-empty">Reward not set</span>'}</span><span class="stake-tag ${g.stake?'stake-lose':''}">${g.stake?'Miss: '+g.stake:'<span class="stake-empty">Stake not set</span>'}</span></div><div class="mc-pb-label"><span>Consistency</span><span>${pct}%</span></div><div class="mc-pb-bg"><div class="mc-pb-fill" style="width:${pct}%"></div></div></div>;
+function renderMembers(){
+let html='<div class="members-grid">';
+MEMBERS.forEach((m,i)=>{
+const g=goalsData[m.name]||{};const score=getScore(m.name);const pct=weeksGone>0?Math.round((score/weeksGone)*100):0;
+html+=<div class="member-card"><div class="mc-top"><div class="mc-avatar" style="background:${m.bg};color:${m.color};">${m.initials}</div><div><div class="mc-name">${m.name}</div><div class="mc-state">${m.state} · ${score} check-in${score!==1?'s':''}</div></div><button class="mc-edit-btn" onclick="openEditModal(${i})">Edit</button></div><div class="goals-stack"><div class="goal-row fit"><div class="goal-tag">Fitness</div><div class="${g.fitness?'goal-text':'goal-empty'}">${g.fitness||'Not set yet'}</div></div><div class="goal-row biz"><div class="goal-tag">Business</div><div class="${g.biz?'goal-text':'goal-empty'}">${g.biz||'Not set yet'}</div></div><div class="goal-row per"><div class="goal-tag">Personal</div><div class="${g.personal?'goal-text':'goal-empty'}">${g.personal||'Not set yet'}</div></div></div><div class="stakes-row"><span class="stake-tag ${g.reward?'stake-win':''}">${g.reward?'Win: '+g.reward:'<span class="stake-empty">Reward not set</span>'}</span><span class="stake-tag ${g.stake?'stake-lose':''}">${g.stake?'Miss: '+g.stake:'<span class="stake-empty">Stake not set</span>'}</span></div><div class="mc-pb-label"><span>Consistency</span><span>${pct}%</span></div><div class="mc-pb-bg"><div class="mc-pb-fill" style="width:${pct}%"></div></div></div>;
 });
-html += '</div>';
-document.getElementById('view-members').innerHTML = html;
+html+='</div>';
+document.getElementById('view-members').innerHTML=html;
 }
-function renderCheckIns() {
-let html = '';
-MEMBERS.forEach((m, i) => {
-const cins = checkinsData[m.name] || {}; const score = Object.values(cins).length;
-let cells = '';
-for (let w = 1; w <= 13; w++) {
-const done = cins[w]; let cls = 'wk-future', label = w;
-if (w < currentWeek) { cls = done ? 'wk-done' : 'wk-miss'; label = done ? '✓' : '✗'; }
-else if (w === currentWeek) { cls = 'wk-current'; label = '→'; }
-const clickable = w === currentWeek ? onclick="openCiModal(${i},${w})" : '';
-cells += <div class="wk-cell ${cls}" title="Week ${w}" ${clickable}>${label}</div>;
+function renderCheckIns(){
+let html='';
+MEMBERS.forEach((m,i)=>{
+const cins=checkinsData[m.name]||{};const score=Object.values(cins).length;
+let cells='';
+for(let w=1;w<=13;w++){
+const done=cins[w];let cls='wk-future',label=w;
+if(w<currentWeek){cls=done?'wk-done':'wk-miss';label=done?'✓':'✗';}
+else if(w===currentWeek){cls='wk-current';label='→';}
+const clickable=w===currentWeek?onclick="openCiModal(${i},${w})":''
+cells+=<div class="wk-cell ${cls}" title="Week ${w}" ${clickable}>${label}</div>;
 }
-html += <div class="ci-member"><div class="ci-header"><div class="lb-avatar" style="background:${m.bg};color:${m.color};width:36px;height:36px;font-size:12px;">${m.initials}</div><div class="ci-name">${m.name}</div><div class="ci-count">${score} / 13 weeks</div></div><div class="week-track">${cells}</div><div class="ci-btns"><button class="ci-btn ci-btn-primary" onclick="openCiModal(${i},${currentWeek})">Log week ${currentWeek} check-in</button><button class="ci-btn ci-btn-secondary" onclick="openEditModal(${i})">Edit goals</button></div></div><hr class="ci-divider">;
+html+=<div class="ci-member"><div class="ci-header"><div class="lb-avatar" style="background:${m.bg};color:${m.color};width:36px;height:36px;font-size:12px;">${m.initials}</div><div class="ci-name">${m.name}</div><div class="ci-count">${score} / 13 weeks</div></div><div class="week-track">${cells}</div><div class="ci-btns"><button class="ci-btn ci-btn-primary" onclick="openCiModal(${i},${currentWeek})">Log week ${currentWeek} check-in</button><button class="ci-btn ci-btn-secondary" onclick="openEditModal(${i})">Edit goals</button></div></div><hr class="ci-divider">;
 });
-document.getElementById('view-checkins').innerHTML = html;
+document.getElementById('view-checkins').innerHTML=html;
 }
-function renderRules() {
-const rules = ['Goals are locked by April 9th — end of Week 1. No changes after that. Own what you commit to.','Check-in is due every Sunday by 11:59 PM local time. Log it yourself. Miss the window, it counts as a miss.','Each week you self-report fitness, business, and personal progress. Honest self-assessment only — the group will call you out.','Final verdict on goal achievement is decided on the July 7th group call. Evidence required: data, screenshots, receipts.','Stakes are non-negotiable. Agreed upfront, enforced by the group. No renegotiating at the finish line.','No ghosting. Two or more weeks dark without communicating = auto-forfeit of your stake. Life happens — talk to the group.','Monthly group call: first Thursday of each month. Everyone reports in 3 minutes or less. Wins, struggles, and course corrections only.','The leaderboard tracks check-in consistency throughout. Final rankings are based on goals actually achieved by June 30th.','Brotherhood rule: if someone is struggling, reach out privately before calling it out on the call. We push each other — we don't pile on.','June 30th is the hard stop. No extensions. Summer gathering celebrates the winners and roasts the rest — all in good spirit.'];
-const tl = [['Apr 2','Challenge begins'],['Apr 9','Goals locked — no changes after this'],['May 7','Month 1 group call'],['Jun 5','Month 2 group call + final accountability push'],['Jun 30','Hard stop — all evidence submitted'],['Jul 7','Verdict call + final leaderboard'],['Jul / Aug','Summer gathering: winners celebrated, losers roasted']];
-let rHtml = '<ul class="rules-list">';
-rules.forEach((r,i) => { rHtml += <li class="rule-item"><div class="rule-num">${String(i+1).padStart(2,'0')}</div><div class="rule-text">${r}</div></li>; });
-rHtml += '</ul><div class="timeline-grid">';
-tl.forEach(([d,t]) => { rHtml += <div class="tl-date">${d}</div><div class="tl-desc">${t}</div>; });
-rHtml += '</div>';
-document.getElementById('view-rules').innerHTML = rHtml;
+function renderRules(){
+const rules=['Goals are locked by April 9th — end of Week 1. No changes after that. Own what you commit to.','Check-in is due every Sunday by 11:59 PM local time. Log it yourself. Miss the window, it counts as a miss.','Each week you self-report fitness, business, and personal progress. Honest self-assessment only — the group will call you out.','Final verdict on goal achievement is decided on the July 7th group call. Evidence required: data, screenshots, receipts.','Stakes are non-negotiable. Agreed upfront, enforced by the group. No renegotiating at the finish line.','No ghosting. Two or more weeks dark without communicating = auto-forfeit of your stake. Life happens — talk to the group.','Monthly group call: first Thursday of each month. Everyone reports in 3 minutes or less. Wins, struggles, and course corrections only.','The leaderboard tracks check-in consistency throughout. Final rankings are based on goals actually achieved by June 30th.','Brotherhood rule: if someone is struggling, reach out privately before calling it out on the call. We push each other — we don't pile on.','June 30th is the hard stop. No extensions. Summer gathering celebrates the winners and roasts the rest — all in good spirit.'];
+const tl=[['Apr 2','Challenge begins'],['Apr 9','Goals locked — no changes after this'],['May 7','Month 1 group call'],['Jun 5','Month 2 group call + final accountability push'],['Jun 30','Hard stop — all evidence submitted'],['Jul 7','Verdict call + final leaderboard'],['Jul / Aug','Summer gathering: winners celebrated, losers roasted']];
+let rHtml='<ul class="rules-list">';
+rules.forEach((r,i)=>{rHtml+=<li class="rule-item"><div class="rule-num">${String(i+1).padStart(2,'0')}</div><div class="rule-text">${r}</div></li>;});
+rHtml+='</ul><div class="timeline-grid">';
+tl.forEach(([d,t])=>{rHtml+=<div class="tl-date">${d}</div><div class="tl-desc">${t}</div>;});
+rHtml+='</div>';
+document.getElementById('view-rules').innerHTML=rHtml;
 }
-let editingMember = null;
-function openEditModal(idx) {
-editingMember = idx; const m = MEMBERS[idx]; const g = goalsData[m.name] || {};
-document.getElementById('modal-name').textContent = m.name;
-document.getElementById('ef-fitness').value = g.fitness || '';
-document.getElementById('ef-biz').value = g.biz || '';
-document.getElementById('ef-personal').value = g.personal || '';
-document.getElementById('ef-reward').value = g.reward || '';
-document.getElementById('ef-stake').value = g.stake || '';
-document.getElementById('save-status').textContent = '';
+let editingMember=null;
+function openEditModal(idx){
+editingMember=idx;const m=MEMBERS[idx];const g=goalsData[m.name]||{};
+document.getElementById('modal-name').textContent=m.name;
+document.getElementById('ef-fitness').value=g.fitness||'';
+document.getElementById('ef-biz').value=g.biz||'';
+document.getElementById('ef-personal').value=g.personal||'';
+document.getElementById('ef-reward').value=g.reward||'';
+document.getElementById('ef-stake').value=g.stake||'';
+document.getElementById('save-status').textContent='';
 document.getElementById('edit-modal').classList.add('open');
 }
-async function saveGoals() {
-const m = MEMBERS[editingMember];
-const payload = { member_name: m.name, fitness: document.getElementById('ef-fitness').value.trim(), biz: document.getElementById('ef-biz').value.trim(), personal: document.getElementById('ef-personal').value.trim(), reward: document.getElementById('ef-reward').value.trim(), stake: document.getElementById('ef-stake').value.trim() };
-document.getElementById('save-status').textContent = 'Saving...';
-const { error } = await db.from('goals_p101').upsert(payload, { onConflict: 'member_name' });
-if (error) { document.getElementById('save-status').textContent = 'Error: ' + error.message; return; }
-goalsData[m.name] = payload;
-document.getElementById('save-status').textContent = 'Saved!';
-setTimeout(() => { closeModal('edit-modal'); renderMembers(); renderLeaderboard(); showToast('Goals saved for ' + m.name, 'success'); }, 600);
+async function saveGoals(){
+const m=MEMBERS[editingMember];
+const payload={member_name:m.name,fitness:document.getElementById('ef-fitness').value.trim(),biz:document.getElementById('ef-biz').value.trim(),personal:document.getElementById('ef-personal').value.trim(),reward:document.getElementById('ef-reward').value.trim(),stake:document.getElementById('ef-stake').value.trim()};
+document.getElementById('save-status').textContent='Saving...';
+const{error}=await db.from('goals_p101').upsert(payload,{onConflict:'member_name'});
+if(error){document.getElementById('save-status').textContent='Error: '+error.message;return;}
+goalsData[m.name]=payload;
+document.getElementById('save-status').textContent='Saved!';
+setTimeout(()=>{closeModal('edit-modal');renderMembers();renderLeaderboard();showToast('Goals saved for '+m.name,'success');},600);
 }
-let ciMemberIdx = null, ciWeekNum = null;
-function openCiModal(idx, week) {
-ciMemberIdx = idx; ciWeekNum = week; const m = MEMBERS[idx]; const g = goalsData[m.name] || {};
-document.getElementById('ci-week-num').textContent = week;
-document.getElementById('ci-modal-member').textContent = m.name + ' · ' + m.state;
-document.getElementById('ci-notes').value = '';
-document.getElementById('ci-save-status').textContent = '';
-const goals = [{cls:'fit',label:'Fitness',text:g.fitness||'Goal not set yet'},{cls:'biz',label:'Business',text:g.biz||'Goal not set yet'},{cls:'per',label:'Personal',text:g.personal||'Goal not set yet'}];
-let gHtml = '';
-goals.forEach((g,gi) => { gHtml += <div class="ci-goal-item ${g.cls}"><div class="ci-goal-label">${g.label}</div><div class="ci-goal-desc">${g.text}</div><div class="ci-check"><label><input type="radio" name="ci-${gi}" value="win"> On track</label><label><input type="radio" name="ci-${gi}" value="miss"> Missed</label></div></div>; });
-document.getElementById('ci-goals-display').innerHTML = gHtml;
+let ciMemberIdx=null,ciWeekNum=null;
+function openCiModal(idx,week){
+ciMemberIdx=idx;ciWeekNum=week;const m=MEMBERS[idx];const g=goalsData[m.name]||{};
+document.getElementById('ci-week-num').textContent=week;
+document.getElementById('ci-modal-member').textContent=m.name+' · '+m.state;
+document.getElementById('ci-notes').value='';
+document.getElementById('ci-save-status').textContent='';
+const goals=[{cls:'fit',label:'Fitness',text:g.fitness||'Goal not set yet'},{cls:'biz',label:'Business',text:g.biz||'Goal not set yet'},{cls:'per',label:'Personal',text:g.personal||'Goal not set yet'}];
+let gHtml='';
+goals.forEach((g,gi)=>{gHtml+=<div class="ci-goal-item ${g.cls}"><div class="ci-goal-label">${g.label}</div><div class="ci-goal-desc">${g.text}</div><div class="ci-check"><label><input type="radio" name="ci-${gi}" value="win"> On track</label><label><input type="radio" name="ci-${gi}" value="miss"> Missed</label></div></div>;});
+document.getElementById('ci-goals-display').innerHTML=gHtml;
 document.getElementById('ci-modal').classList.add('open');
 }
-async function saveCheckIn() {
-const m = MEMBERS[ciMemberIdx];
-const payload = { member_name: m.name, week_number: ciWeekNum, fitness_status: document.querySelector('input[name="ci-0"]:checked')?.value||null, biz_status: document.querySelector('input[name="ci-1"]:checked')?.value||null, personal_status: document.querySelector('input[name="ci-2"]:checked')?.value||null, notes: document.getElementById('ci-notes').value.trim(), submitted_at: new Date().toISOString() };
-document.getElementById('ci-save-status').textContent = 'Saving...';
-const { error } = await db.from('checkins_p101').upsert(payload, { onConflict: 'member_name,week_number' });
-if (error) { document.getElementById('ci-save-status').textContent = 'Error: ' + error.message; return; }
-if (!checkinsData[m.name]) checkinsData[m.name] = {};
-checkinsData[m.name][ciWeekNum] = payload;
-document.getElementById('ci-save-status').textContent = 'Check-in submitted!';
-setTimeout(() => { closeModal('ci-modal'); renderCheckIns(); renderLeaderboard(); updateStats(); showToast('Week ' + ciWeekNum + ' check-in saved for ' + m.name, 'success'); }, 600);
+async function saveCheckIn(){
+const m=MEMBERS[ciMemberIdx];
+const payload={member_name:m.name,week_number:ciWeekNum,fitness_status:document.querySelector('input[name="ci-0"]:checked')?.value||null,biz_status:document.querySelector('input[name="ci-1"]:checked')?.value||null,personal_status:document.querySelector('input[name="ci-2"]:checked')?.value||null,notes:document.getElementById('ci-notes').value.trim(),submitted_at:new Date().toISOString()};
+document.getElementById('ci-save-status').textContent='Saving...';
+const{error}=await db.from('checkins_p101').upsert(payload,{onConflict:'member_name,week_number'});
+if(error){document.getElementById('ci-save-status').textContent='Error: '+error.message;return;}
+if(!checkinsData[m.name])checkinsData[m.name]={};
+checkinsData[m.name][ciWeekNum]=payload;
+document.getElementById('ci-save-status').textContent='Check-in submitted!';
+setTimeout(()=>{closeModal('ci-modal');renderCheckIns();renderLeaderboard();updateStats();showToast('Week '+ciWeekNum+' check-in saved for '+m.name,'success');},600);
 }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function switchTab(id, btn) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active')); document.getElementById('view-'+id).classList.add('active'); btn.classList.add('active'); }
-function showToast(msg, type='success') { const t = document.getElementById('toast'); t.textContent = msg; t.className = 'toast '+type+' show'; setTimeout(() => { t.classList.remove('show'); }, 3000); }
-document.querySelectorAll('.modal-overlay').forEach(overlay => { overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); }); });
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function switchTab(id,btn){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));document.getElementById('view-'+id).classList.add('active');btn.classList.add('active');}
+function showToast(msg,type='success'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type+' show';setTimeout(()=>{t.classList.remove('show');},3000);}
+document.querySelectorAll('.modal-overlay').forEach(overlay=>{overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('open');});});
+loadAll();
 </script>
 </body>
 </html>
